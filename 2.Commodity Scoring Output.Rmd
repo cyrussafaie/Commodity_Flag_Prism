@@ -1,0 +1,446 @@
+---
+title: "Commodity Flag Designation"
+author: "Cyrus Safaie"
+date: "November 17, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,cache = T)
+```
+
+### Data Variables and flags
+```{r}
+final.desig=read.csv("data_for_score_calc_20160130.csv")
+#final.desig=final.desig[,-64]
+dim(final.desig)
+names(final.desig)
+#str(final.desig)
+
+
+
+
+```
+
+### Scoring
+
+```{r}
+scroring = function(dataaa,
+                    WeightShelflife15days = 0.1,
+                    WeightShelflife22days = 0.1,
+                    WeightShelflife61days = 0.1,
+                    WeightQty_kvi = 0.05,
+                    WeightSales_kvi = 0.15,
+                    WeightQty_pen_kvi = 0.05,
+                    WeightCust_cnt_kvi = 0.05,
+                    WeightCust_pen_kvi = 0.1,
+                    WeightElasticity_kvi = 0.05,
+                    WeightPsi_cnt_kvi = 0.05,
+                    WeightPsi_share_kvi = 0.05,
+                    Weight3perc_chng = 0.1,
+                    Weight1perc_chng = 0.1,
+                    Weight0perc_chng = 0.1) {
+                    dataaa = transform(
+                    dataaa,
+                    score = (
+                    WeightShelflife15days * less_than_15days_shelflife + WeightShelflife22days *
+                    less_than_22days_shelflife + WeightShelflife61days * less_than_61days_shelflife
+                    + WeightQty_kvi * qty_kvi + WeightSales_kvi *
+                    sales_kvi + WeightQty_pen_kvi * qty_pen_kvi
+                    + WeightCust_cnt_kvi * cust_cnt_kvi + WeightCust_pen_kvi *
+                    cust_pen_kvi
+                    + WeightElasticity_kvi * elasticity_kvi +
+                    WeightPsi_cnt_kvi * psi_cnt_kvi + WeightPsi_share_kvi * psi_share_kvi
+                    + Weight3perc_chng * more_than3perc_chng + Weight1perc_chng *
+                    more_than1perc_chng + Weight0perc_chng * more_than0perc_chng
+                    ) / (
+                    WeightShelflife15days + WeightShelflife22days + WeightShelflife61days
+                    + WeightQty_kvi + WeightSales_kvi + WeightQty_pen_kvi
+                    + WeightCust_cnt_kvi + WeightCust_pen_kvi
+                    + WeightElasticity_kvi + WeightPsi_cnt_kvi + WeightPsi_share_kvi
+                    + Weight3perc_chng + Weight1perc_chng + Weight0perc_chng
+                    )
+                    )
+                    }
+
+a=scroring(final.desig)
+max(a)
+min
+#names(a)
+# dim(a)
+
+
+```
+
+
+
+```{r}
+library(plyr)
+final.desig.threshold=ddply(a, .(div_nm), function(x) cbind(quantile(x$score,.96),quantile(x$score,.97),quantile(x$score,.98)))
+colnames(final.desig.threshold)=c("div_nm","a96%","a97%","a98%")
+
+new.data=merge(x = a, y = final.desig.threshold, by = "div_nm", all.x = TRUE)
+#names(new.data)
+dim(new.data)
+#write.csv(final.desig.threshold,"sum.threshold2.csv",row.names = F)
+#remove(final_data)
+final_data_new=cbind(new.data,com_flg=ifelse(new.data$`a98%`<=new.data$score,"Y","N"))
+dim(final_data_new)
+
+names(final_data_new)
+str(final_data_new)
+head(final_data_new$com_flg)
+#write.csv(final_data_new,"co_flag_20161121.csv",row.names = F)
+```
+
+
+```{r}
+out <- ifelse(final_data_new$pim_cls_desc %in% pimclasses | final_data_new$pim_grp_desc %in% pimgroups | final_data_new$div_nm =="CHARLOTTE", "N",final_data_new$com_flg)
+out[out %in% 1] <- "N"
+out[out %in% 2] <- "Y"
+table(out)
+table(final_data_new$com_flg)
+
+          pimclasses=c("BEVERAGE"
+          ,"CHEMICALS & CLEANING AGENTS"
+          )
+          #--no commodity in these pim classes
+
+          
+          pimgroups=c("STRAWBERRIES, VALUE ADDED, FRESH",
+          "CITRUS, VALUE ADDED, FRESH, LIGHTLY PRESERVED",
+          "GRAPEFRUIT, FRESH, VALUE ADDED",
+          "LEMON, FRESH, VALUE ADDED",
+          "ORANGES, FRESH, VALUE ADDED",
+          "FLOWERS, PLANTS, & TREES",
+          "GARLIC, VALUE ADDED, FRESH",
+          "MICRO GREENS, FRESH",
+          "SPROUTS, FRESH",
+          "CILANTRO, FRESH, VALUE ADDED",
+          "HERBS, OTHER, FRESH",
+          "OTHER HERBS & SPROUTS, VALUE ADDED, FRESH",
+          "PARSLEY, FRESH, VALUE ADDED",
+          "ARUGULA, FRESH",
+          "GREENS, OTHER, FRESH",
+          "KALE, FRESH",
+          "LETTUCE, ICEBERG, FRESH, VALUE ADDED",
+          "LETTUCE, LEAF GREEN, FRESH, VALUE ADDED",
+          "LETTUCE, LEAF RED, FRESH, VALUE ADDED",
+          "LETTUCE, ROMAINE, FRESH, VALUE ADDED",
+          "SPINACH, FRESH",
+          "SPINACH, FRESH, VALUE ADDED",
+          "MUSHROOMS, BROWNS, FRESH",
+          "MUSHROOMS, EXOTICS, FRESH",
+          "MUSHROOMS, WHITE, FRESH",
+          "MUSHROOMS, BROWNS, FRESH, VALUE ADDED",
+          "MUSHROOMS, EXOTICS, FRESH, VALUE ADDED",
+          "MUSHROOMS, WHITE, FRESH, VALUE ADDED",
+          "VEGETABLES BLENDS, VALUE ADDED, FRESH",
+          "BEANS, GREEN, FRESH, VALUE ADDED",
+          "PEAS, VALUE ADDED, FRESH",
+          "BEETS, FRESH",
+          "RADISHES, FRESH",
+          "ROOT VEGETABLES, OTHER, FRESH",
+          "RUTABAGAS, FRESH",
+          "TURNIP GREENS, FRESH",
+          "BEETS, FRESH, VALUE ADDED",
+          "CARROTS, FRESH, VALUE ADDED",
+          "RADISHES, FRESH, VALUE ADDED",
+          "ROOT VEGETABLES, OTHER, VALUE ADDED, FRESH",
+          "GARDEN SALAD KIT, FRESH",
+          "GARDEN SALAD MIXES, FRESH",
+          "ARTICHOKES, FRESH",
+          "ASPARAGUS, VALUE ADDED, FRESH",
+          "BRUSSEL SPROUTS, FRESH",
+          "CORN, FRESH",
+          "ARTICHOKES, FRESH, VALUE ADDED",
+          "BROCCOLI, FRESH, VALUE ADD",
+          "BRUSSEL SPROUTS, FRESH, VALUE ADDED",
+          "CABBAGE, FRESH, VALUE ADDED",
+          "CAULIFLOWER, FRESH, VALUE ADDED",
+          "CELERY, FRESH, VALUE ADDED",
+          "COLESLAW PRODUCT BLENDS, FRESH",
+          "CORN, FRESH, VALUE ADDED",
+          "VEGETABLES, OTHER, FRESH, VALUE ADDED",
+          "LETTUCE, ENDIVE, FRESH",
+          "LETTUCE, ESCAROLE, FRESH",
+          "BANANAS, FRESH",
+          "BANANAS, FRESH, VALUE ADDED",
+          "LIMES, FRESH, VALUE ADDED",
+          "CUT FRUIT, MIXED / MULTI COMPONENT",
+          "CUT FRUIT, MIXED / MULTI COMPONENT, LIGHTLY PRESERVED",
+          "FRUITS, MIXED, FRUIT BASKETS, FRESH",
+          "MELON, CUT FRUIT, MIXED / MULTI COMPONENT",
+          "GRAPES, GREEN, VALUE ADDED, FRESH",
+          "GRAPES, OTHER, VALUE ADDED, FRESH",
+          "GRAPES, RED, VALUE ADDED, FRESH",
+          "GRAPES, VALUE ADDED, FRESH, LIGHTLY PRESERVED",
+          "CANTALOUPE, FRESH, VALUE ADDED",
+          "HONEYDEW, FRESH, VALUE ADDED",
+          "MELONS, VALUE ADDED, FRESH, LIGHTLY PRESERVED",
+          "WATERMELON, FRESH, VALUE ADDED",
+          "NECTARINES, FRESH",
+          "PEACHES, FRESH",
+          "PLUMS, FRESH",
+          "STONE FRUIT, OTHER, FRESH",
+          "APPLES, RED & BLENDS, VALUE ADDED, FRESH",
+          "PEARS, FRESH, VALUE ADD",
+          "CARAMBOLA/STAR FRUIT, FRESH",
+          "COCONUTS, FRESH",
+          "FRUIT, OTHER FRESH",
+          "KIWIFRUIT, FRESH",
+          "MANGOES, FRESH",
+          "PAPAYAS, FRESH",
+          "PLANTAINS, FRESH",
+          "TROPICAL FRUIT, OTHER, FRESH",
+          "MANGOES, FRESH, VALUE ADDED",
+          "PINEAPPLE, FRESH, VALUE ADDED",
+          "TROPICAL, CUT FRUIT, MIXED / MULTI COMPONENT",
+          "CUCUMBERS, FRESH, VALUE ADDED",
+          "EGGPLANT, FRESH",
+          "SQUASH, FRESH, VALUE ADDED",
+          "ZUCCHINI, FRESH, VALUE ADDED",
+          "LEEKS, FRESH",
+          "LEEKS, FRESH, VALUE ADDED",
+          "ONIONS, GREEN, FRESH",
+          "ONIONS, GREEN, FRESH, VALUE ADDED",
+          "ONIONS, OTHER, VALUE ADDED, FRESH",
+          "ONIONS, RED, FRESH, VALUE ADDED",
+          "ONIONS, VALUE ADDED, FRESH, LIGHTLY PRESERVED",
+          "ONIONS, WHITE, FRESH, VALUE ADDED",
+          "ONIONS, YELLOW, FRESH, VALUE ADDED",
+          "PEPPERS, CHILI, OTHER, VALUE ADDED, FRESH",
+          "PEPPERS, GREEN BELL, FRESH, VALUE ADDED",
+          "PEPPERS, JALAPENO, VALUE ADDED, FRESH",
+          "PEPPERS, OTHER, FRESH, VALUE ADDED",
+          "PEPPERS, RED BELL, FRESH, VALUE ADDED",
+          "PEPPERS, YELLOW BELL, FRESH, VALUE ADDED",
+          "POTATOES, RED, FRESH, VALUE ADDED",
+          "POTATOES, SPECIALTY, OTHER, FRESH, VALUE ADDED",
+          "POTATOES, SWEET & YAMS FRESH, VALUE ADDED",
+          "POTATOES, WHITE, FRESH, VALUE ADDED",
+          "POTATOES, YELLOW, FRESH, VALUE ADDED",
+          "PICO DE GALLO",
+          "TOMATOES, FRESH, VALUE ADDED",
+          "PUMPKINS, FRESH",
+        #  /*produce Exclusions- 116 PIM Groups*/
+          "CHICKEN, TENDERLOINS, TENDERS & STRIP MEAT, RAW, BREADED, FROZEN",
+          "TURKEY BREAST, COOKED, UNSLICED, REFRIGERATED",
+          "CHICKEN, TENDERLOINS, TENDERS & STRIP MEAT, COOKED, BREADED, FROZEN",
+          "CHICKEN, TENDERLOINS, TENDERS & STRIP MEAT, COOKED, UNBREADED",
+          "CHICKEN, BREAST & PATTY, BONELESS, BREADED, COOKED, FROZEN",
+          "CHICKEN, CUTS, COOKED, BREADED & UNBREADED (QTRS, HALVES, PIECES, & WHOLE BIRDS)",
+          "TURKEY BREAST, COOKED, SLICED, REFRIGERATED",
+          "TURKEY, PATTIES, GROUND, RAW, FROZEN",
+          "CHICKEN, PHILLY STYLE, FROZEN",
+          "TURKEY, PROCESSED, OTHER, FROZEN",
+          "TURKEY BACON, COOKED, REFRIGERATED",
+          "CHICKEN, TENDERLOINS, TENDERS & STRIP MEAT, RAW, UNBREADED, FROZEN",
+          "TURKEY BACON, RAW, REFRIGERATED",
+          "TURKEY WINGS",
+          "TURKEY BREAST, COOKED, SLICED, FROZEN",
+          "CHICKEN, PARTS, BREADED, RAW",
+          "TURKEY THIGHS",
+          "TURKEY, PROCESSED, OTHER, REFRIGERATED",
+         # /*Poultry PIM Group exclusions - 18 PIM Groups*/
+          "PORK, BACON, SLICED, PRE-COOKED, REFRIGERATED",
+          "BACON BITS & PIECES, COOKED, REFRIGERATED",
+          "PORK, CHOPS, BONE IN, RAW, FROZEN",
+          "PORK, BBQ, PULLED, CHOPPED, SHREDDED, COOKED, FROZEN",
+          "PORK, PRECOOKED, OTHER, FROZEN",
+          "PORK, PRECOOKED, OTHER, REFRIGERATED",
+          "CANADIAN BACON, BULK OR SLICES, REFRIGERATED",
+          "PORK, PATTIES, BREADED & UNBREADED, FROZEN",
+          "PORK, HAM, PROSCIUTTO, REFRIGERATED",
+          "PORK, CHOPS, FILLETS, RAW, FROZEN",
+          "HAM, SPECIALTY, SLICED, DICED, STRIPS, REFRIGERATED",
+          "BACON BITS & PIECES, RAW, FROZEN",
+          "PORK, DICED, STRIPS & CHUNKS, UNBREADED, RAW, FROZEN",
+          "PORK, BACON, PANCETTA, REFRIGERATED",
+          "FAT BACK, HOCKS & SHANKS, FROZEN",
+          "PORK, STEAK/CUTLETS/MEDALLIONS, UNBREADED, RAW, FROZEN",
+          "PORK, HAM, SPECIALTY, OTHER, REFRIGERATED",
+          "BACON BITS & PIECES, RAW, REFRIGERATED",
+          "PORK, OTHER PARTS, UNBREADED, RAW, REFRIGERATED",
+          "PORK, CHOPS, BONE IN, RAW, REFRIGERATED",
+          "PORK, BBQ, PULLED, CHOPPED, SHREDDED, COOKED, REFRIGERATED",
+          "PORK, HAM, SPECIALTY, OTHER, FROZEN",
+          "PORK, BACON, PANCETTA, FROZEN",
+          #/*Pork PIM Group exclusions - 23 PIM Groups */
+          "CATFISH, BREADED, FROZEN, DOMESTIC",
+          "CLAMS, BREADED OR BATTERED",
+          "COD, BREADED OR BATTERED",
+          "CRABMEAT, BREADED/BATTERED (NOT CRAB CAKES)",
+          "FISH, OTHER, BREADED FROZEN",
+          "HADDOCK, BREADED OR BATTERED",
+          "HALIBUT, BREADED OR BATTERED",
+          "OYSTERS, BREADED OR BATTERED",
+          "PANGASIUS, BREADED, FROZEN",
+          "PERCH, OCEAN, BREADED",
+          "PIKE, BREADED",
+          "POLLOCK, BREADED OR BATTERED",
+          "SALMON, BREADED/BATTERED OR SEASONED, FROZEN, FARMED",
+          "SALMON, BREADED/BATTERED OR SEASONED, FROZEN, WILD",
+          "SCALLOP, BREADED OR BATTERED",
+          "SEAFOOD, BREADED, OTHER, FROZEN",
+          "SHRIMP, BREADED, FROZEN",
+          "SQUID & CALAMARI, BREADED",
+          "TILAPIA, BREADED OR BATTERED, FROZEN",
+          "TROUT, BREADED FROZEN",
+          "WHITING, BREADED OR BATTERED",
+          "FLOUNDER/SOLE, VALUE ADDED, FROZEN",
+          "HERRING & ANCHOVIES, VALUE ADDED, REFRIGERATED"
+# /  * Seafood PIM Group exclusions - 23 PIM Groups *  /
+          )
+
+# adj com flag is the flag, but we still need to apply the maximum rules                    
+final_data_new_adj=cbind(final_data_new,com_flg_adj=out)
+dim(final_data_new_adj)
+str(final_data_new_adj)
+```
+
+Now let's apply the majority rule: if more than 80% of market currently flag then flag everywhere, if more than 80 % suggesting flag then flag. Contingency on the number of markets as well (5 or 10 at least dependening on the results).
+
+```{r}
+all=sqldf('select prod_nbr, count(distinct div_nm) as ttl_mrkt_itm
+          from final_data_new_adj 
+          where
+          div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          group by prod_nbr ')
+
+comflag_adjusted=sqldf('select prod_nbr, count(distinct div_nm) as prposd_com_flg
+          from final_data_new_adj 
+          where com_flg_adj="Y"
+          
+          and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          group by prod_nbr ')
+
+current_com_ind=sqldf('select prod_nbr, count(distinct div_nm) as current_com_ind
+          from final_data_new_adj 
+          where
+          div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          and cmdty_ind="Y" 
+          group by prod_nbr ')
+
+dim(data.com)
+# merging data 
+data.com=merge(all,comflag_adjusted,by = "prod_nbr", all.x = TRUE)
+data.com=merge(data.com,current_com_ind,by = "prod_nbr", all.x = TRUE)
+
+# calcualting the share
+data.com=cbind(data.com, proposed_share=round(100*data.com$prposd_com_flg/data.com$ttl_mrkt_itm,0),current_share=round(100*data.com$current_com_ind/data.com$ttl_mrkt_itm,0))
+
+#majority flag
+final_IsMajority=ifelse(data.com$proposed_share>80 | data.com$current_share>80,1,0)
+
+data.com=cbind(data.com,final_IsMajority)
+data.com$final_IsMajority[is.na(data.com$final_IsMajority)]<-0
+
+#final data with flag and everyhting else
+final_data_new_adj_majority=merge(final_data_new_adj,data.com,by = "prod_nbr", all.x = TRUE )
+#write.csv(data.com,"majority_rule_items.csv")
+final_data_new_adj_majority$final_IsMajority[is.na(final_data_new_adj_majority$final_IsMajority)]<-0
+
+com_flg_final= ifelse(final_data_new_adj_majority$final_IsMajority==1,"Y",final_data_new_adj_majority$com_flg_adj )
+com_flg_final[com_flg_final %in% 1] <- "N"
+com_flg_final[com_flg_final %in% 2] <- "Y"
+table(com_flg_final)
+ 
+final_dataJan31=cbind(final_data_new_adj_majority,com_flg_final)
+table(final_dataJan31$com_flg_final)
+
+#write.csv(final_dataJan31,"final_dataJan31_1445.csv") #98% threshold        
+
+final_dataJan31=read.csv("final_dataJan31_1445.csv")
+dim(final_dataJan31)
+#reapplying the exclusion filter
+out2 <- ifelse(final_dataJan31$pim_cls_desc %in% pimclasses | final_dataJan31$pim_grp_desc %in% pimgroups | final_dataJan31$div_nm =="CHARLOTTE", "N",final_dataJan31$com_flg_final)
+out2[out2 %in% 1] <- "N"
+out2[out2 %in% 2] <- "Y"
+table(out2)
+final_dataJan31_final=cbind(final_dataJan31,com_flg_final_final=out2)
+dim(final_dataJan31_final)
+
+write.csv(final_dataJan31_final,"final_dataJan31_1525.csv",row.names = F)
+
+final_dataJan31_final$ttl_mrkt_itm[is.na(final_dataJan31_final$ttl_mrkt_itm)]<-0
+
+dim(final_dataJan31_final)
+final_dataJan31_final$com_flg_final_final[final_dataJan31_final$ttl_mrkt_itm=1]<-final_dataJan31_final$com_flg_adj
+
+unique(final_dataJan31_final$com_flg_adj)
+final_dataJan31_final$ttl_mrkt_itm
+# unique(final_data_new_adj_majority$prod_stat_desc)
+# dim(final_data_new_adj_majority)
+# names(div)
+# div=div[order(div$`count(distinct div_nm)`, decreasing = TRUE),]
+# head(final_data_new_adj_majority,100)
+# sum(final_data_new_adj_majority$final_IsMajority)
+# names(final_data_new_adj)
+```
+
+```{r}
+final_dataJan31_final=read.csv("final_dataJan31_1525.csv")
+names(final_dataJan31_final)
+
+write.csv(final_dataJan31_final,"final_dataJan31_1745.csv", row.names = F )
+dim(final_dataJan31_final)
+```
+
+
+```{r}
+table(reco=final_dataJan31_final$com_flg_final_final,current=final_dataJan31_final$cmdty_ind)
+
+```
+
+```{r}
+
+mydf <- read.csv("com_flag_20161121.csv")
+```
+
+## Flag Count by Division
+
+```{r}
+library(sqldf)
+
+divs=sqldf('select div_nm, count(*) as "proposed" from final_dataJan31_final where com_flg_final_final="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
+
+divs[order(divs$proposed),]
+
+mean(divs$proposed)
+
+```
+
+```{r}
+library(sqldf)
+
+div=sqldf('select div_nm, count(*) as "current" from final_dataJan31 where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
+div[order(div$current),]
+
+mean(div$current)
+
+```
+
+```{r}
+ff=merge(div,divs,by = "div_nm", all.x = TRUE)
+fff=cbind(ff, delta.ProposedMinusCurrent=ff$proposed-ff$current)
+fff[order(fff$delta.ProposedMinusCurrent),]
+```
+
+
+## Flag Count by Class
+
+```{r}
+cls=sqldf('select pim_cls_desc, count(*) from final_dataJan31_final where  div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+cls[order(cls$'count(*)'),]
+
+#com_flg_final_final="Y" and
+```
+
+```{r}
+cls=sqldf('select pim_cls_desc, count(*) from final_dataJan31_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+
+#
+cls[order(cls$'count(*)'),]
+```
+
