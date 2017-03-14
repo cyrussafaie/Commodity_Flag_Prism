@@ -11,13 +11,14 @@ knitr::opts_chunk$set(echo = T,cache = T)
 
 ### Data Variables and flags
 ```{r}
-final.desig=read.csv("data_for_score_calc_20160130.csv")
+setwd("C:/Users/e026026/Documents/Analysis 2017/CommodityFlagIdentification201703_output")
+final.desig=read.csv("sqlqueryoutput_20170314_1300.csv")
 #final.desig=final.desig[,-64]
 dim(final.desig)
 names(final.desig)
-#str(final.desig)
+str(final.desig)
 
-
+dir()
 
 
 ```
@@ -63,12 +64,13 @@ scroring = function(dataaa,
                     )
                     }
 
-a=scroring(final.desig)
-max(a)
-min
+a=scroring()
+max(a$score)
+min(a$score)
+library(ggplot2)
+quickplot(a$score)
 #names(a)
 # dim(a)
-
 
 ```
 
@@ -302,23 +304,25 @@ str(final_data_new_adj)
 Now let's apply the majority rule: if more than 80% of market currently flag then flag everywhere, if more than 80 % suggesting flag then flag. Contingency on the number of markets as well (5 or 10 at least dependening on the results).
 
 ```{r}
+unique(final_data_new_adj$div_nm)
+library(sqldf)
 all=sqldf('select prod_nbr, count(distinct div_nm) as ttl_mrkt_itm
           from final_data_new_adj 
           where
-          div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          div_nm not in ("CHARLOTTE","WAUKESHA") 
           group by prod_nbr ')
 
 comflag_adjusted=sqldf('select prod_nbr, count(distinct div_nm) as prposd_com_flg
           from final_data_new_adj 
           where com_flg_adj="Y"
           
-          and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          and div_nm not in ("CHARLOTTE","WAUKESHA") 
           group by prod_nbr ')
 
 current_com_ind=sqldf('select prod_nbr, count(distinct div_nm) as current_com_ind
           from final_data_new_adj 
           where
-          div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") 
+          div_nm not in ("CHARLOTTE","WAUKESHA") 
           and cmdty_ind="Y" 
           group by prod_nbr ')
 
