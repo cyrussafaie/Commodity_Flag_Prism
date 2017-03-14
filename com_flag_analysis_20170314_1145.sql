@@ -50,7 +50,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -150,7 +150,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -167,9 +167,12 @@ left join prcmuser_usf_customer c /*to get cust_nm, menu_type.  Also removes cus
 	on s.div_nbr = c.div_nbr
 	and s.cust_nbr = c.cust_nbr
 	
-left join daily_calendar_map m
-	on m.dt= s.prcs_dt
+--left join daily_calendar_map m
+--	on m.dt= s.prcs_dt
 
+left join prcmuser_usf_calendar m
+	on m.clndr_dt= s.prcs_dt
+	
 where 
 p.prod_rsrvbl_ind='Y' 
 and p.prod_stat_desc in ('Seasonal (4A)','Seasonal (3A)','Out of Stock (2A)','Active (0A)')
@@ -234,7 +237,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -306,7 +309,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -363,7 +366,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -419,7 +422,7 @@ select *
 from prcmuser_usf_sales_hist 
 where (cntrct_cpr_bsis  not in ('CCN','DDN','DWA','lpc','LIM','LPC','LPM','LPW','P07','PWW','LIC','PO') 
 or cntrct_cpr_bsis is null)
-and prcs_dt between '2016-10-02' and '2016-12-31'
+and prcs_dt between '2016-12-04' and '2017-03-04'
 
 )b
 where include_flag=1
@@ -500,33 +503,33 @@ a.ttl_qty_cs_div
 
 ,a.psi_cnt_div
 ,a.psi_share_of_item_in_div
-, round(sum (a.lpc_201640),3) as lpc_201640
-, round(sum (a.lpc_201641),3) as lpc_201641
-, round(sum (a.lpc_201642),3) as lpc_201642
-, round(sum (a.lpc_201643),3) as lpc_201643
-, round(sum (a.lpc_201644),3) as lpc_201644
-, round(sum (a.lpc_201645),3) as lpc_201645
-, round(sum (a.lpc_201646),3) as lpc_201646
-, round(sum (a.lpc_201647),3) as lpc_201647
-, round(sum (a.lpc_201648),3) as lpc_201648
-, round(sum (a.lpc_201649),3) as lpc_201649
-, round(sum (a.lpc_201650),3) as lpc_201650
-, round(sum (a.lpc_201651),3) as lpc_201651
-, round(sum (a.lpc_201652),3) as lpc_201652
+, round(sum (a.lpc_one),3) as lpc_one
+, round(sum (a.lpc_two),3) as lpc_two
+, round(sum (a.lpc_three),3) as lpc_three
+, round(sum (a.lpc_four),3) as lpc_four
+, round(sum (a.lpc_five),3) as lpc_five
+, round(sum (a.lpc_six),3) as lpc_six
+, round(sum (a.lpc_seven),3) as lpc_seven
+, round(sum (a.lpc_eight),3) as lpc_eight
+, round(sum (a.lpc_nine),3) as lpc_nine
+, round(sum (a.lpc_ten),3) as lpc_ten
+, round(sum (a.lpc_eleven),3) as lpc_eleven
+, round(sum (a.lpc_twelve),3) as lpc_twelve
+, round(sum (a.lpc_thirteen),3) as lpc_thirteen
 
-, round(sum (a.tmc_201640),3) as tmc_201640
-, round(sum (a.tmc_201641),3) as tmc_201641
-, round(sum (a.tmc_201642),3) as tmc_201642
-, round(sum (a.tmc_201643),3) as tmc_201643
-, round(sum (a.tmc_201644),3) as tmc_201644
-, round(sum (a.tmc_201645),3) as tmc_201645
-, round(sum (a.tmc_201646),3) as tmc_201646
-, round(sum (a.tmc_201647),3) as tmc_201647
-, round(sum (a.tmc_201648),3) as tmc_201648
-, round(sum (a.tmc_201649),3) as tmc_201649
-, round(sum (a.tmc_201650),3) as tmc_201650
-, round(sum (a.tmc_201651),3) as tmc_201651
-, round(sum (a.tmc_201652),3) as tmc_201652
+, round(sum (a.tmc_one),3) as tmc_one
+, round(sum (a.tmc_two),3) as tmc_two
+, round(sum (a.tmc_three),3) as tmc_three
+, round(sum (a.tmc_four),3) as tmc_four
+, round(sum (a.tmc_five),3) as tmc_five
+, round(sum (a.tmc_six),3) as tmc_six
+, round(sum (a.tmc_seven),3) as tmc_seven
+, round(sum (a.tmc_eight),3) as tmc_eight
+, round(sum (a.tmc_nine),3) as tmc_nine
+, round(sum (a.tmc_ten),3) as tmc_ten
+, round(sum (a.tmc_eleven),3) as tmc_eleven
+, round(sum (a.tmc_twelve),3) as tmc_twelve
+, round(sum (a.tmc_thirteen),3) as tmc_thirteen
 
 
 from (
@@ -550,33 +553,33 @@ Select a_tabl.*
 
 , psi.psi_cnt/psi_div.psi_cnt_div as psi_share_of_item_in_div
 /*28 to 40*/
-, case when wkly_sls.fisc_yr_wk='201640' then round(wkly_sls.lpc,3) else 0 end as lpc_201640
-, case when wkly_sls.fisc_yr_wk='201641' then round(wkly_sls.lpc,3) else 0 end as lpc_201641 
-, case when wkly_sls.fisc_yr_wk='201642' then round(wkly_sls.lpc,3) else 0 end as lpc_201642
-, case when wkly_sls.fisc_yr_wk='201643' then round(wkly_sls.lpc,3) else 0 end as lpc_201643
-, case when wkly_sls.fisc_yr_wk='201644' then round(wkly_sls.lpc,3) else 0 end as lpc_201644
-, case when wkly_sls.fisc_yr_wk='201645' then round(wkly_sls.lpc,3) else 0 end as lpc_201645
-, case when wkly_sls.fisc_yr_wk='201646' then round(wkly_sls.lpc,3) else 0 end as lpc_201646	
-, case when wkly_sls.fisc_yr_wk='201647' then round(wkly_sls.lpc,3) else 0 end as lpc_201647
-, case when wkly_sls.fisc_yr_wk='201648' then round(wkly_sls.lpc,3) else 0 end as lpc_201648
-, case when wkly_sls.fisc_yr_wk='201649' then round(wkly_sls.lpc,3) else 0 end as lpc_201649
-, case when wkly_sls.fisc_yr_wk='201650' then round(wkly_sls.lpc,3) else 0 end as lpc_201650
-, case when wkly_sls.fisc_yr_wk='201651' then round(wkly_sls.lpc,3) else 0 end as lpc_201651
-, case when wkly_sls.fisc_yr_wk='201652' then round(wkly_sls.lpc,3) else 0 end as lpc_201652
+, case when wkly_sls.fisc_yr_wk='201649' then round(wkly_sls.lpc,3) else 0 end as lpc_one
+, case when wkly_sls.fisc_yr_wk='201650' then round(wkly_sls.lpc,3) else 0 end as lpc_two 
+, case when wkly_sls.fisc_yr_wk='201651' then round(wkly_sls.lpc,3) else 0 end as lpc_three
+, case when wkly_sls.fisc_yr_wk='201652' then round(wkly_sls.lpc,3) else 0 end as lpc_four
+, case when wkly_sls.fisc_yr_wk='201701' then round(wkly_sls.lpc,3) else 0 end as lpc_five
+, case when wkly_sls.fisc_yr_wk='201702' then round(wkly_sls.lpc,3) else 0 end as lpc_six
+, case when wkly_sls.fisc_yr_wk='201703' then round(wkly_sls.lpc,3) else 0 end as lpc_seven	
+, case when wkly_sls.fisc_yr_wk='201704' then round(wkly_sls.lpc,3) else 0 end as lpc_eight
+, case when wkly_sls.fisc_yr_wk='201705' then round(wkly_sls.lpc,3) else 0 end as lpc_nine
+, case when wkly_sls.fisc_yr_wk='201706' then round(wkly_sls.lpc,3) else 0 end as lpc_ten
+, case when wkly_sls.fisc_yr_wk='201707' then round(wkly_sls.lpc,3) else 0 end as lpc_eleven
+, case when wkly_sls.fisc_yr_wk='201708' then round(wkly_sls.lpc,3) else 0 end as lpc_twelve
+, case when wkly_sls.fisc_yr_wk='201709' then round(wkly_sls.lpc,3) else 0 end as lpc_thirteen
 
-, case when wkly_sls.fisc_yr_wk='201640' then round(wkly_sls.tmc,3) else 0 end as tmc_201640
-, case when wkly_sls.fisc_yr_wk='201641' then round(wkly_sls.tmc,3) else 0 end as tmc_201641 
-, case when wkly_sls.fisc_yr_wk='201642' then round(wkly_sls.tmc,3) else 0 end as tmc_201642
-, case when wkly_sls.fisc_yr_wk='201643' then round(wkly_sls.tmc,3) else 0 end as tmc_201643
-, case when wkly_sls.fisc_yr_wk='201644' then round(wkly_sls.tmc,3) else 0 end as tmc_201644
-, case when wkly_sls.fisc_yr_wk='201645' then round(wkly_sls.tmc,3) else 0 end as tmc_201645
-, case when wkly_sls.fisc_yr_wk='201646' then round(wkly_sls.tmc,3) else 0 end as tmc_201646	
-, case when wkly_sls.fisc_yr_wk='201647' then round(wkly_sls.tmc,3) else 0 end as tmc_201647
-, case when wkly_sls.fisc_yr_wk='201648' then round(wkly_sls.tmc,3) else 0 end as tmc_201648
-, case when wkly_sls.fisc_yr_wk='201649' then round(wkly_sls.tmc,3) else 0 end as tmc_201649
-, case when wkly_sls.fisc_yr_wk='201650' then round(wkly_sls.tmc,3) else 0 end as tmc_201650
-, case when wkly_sls.fisc_yr_wk='201651' then round(wkly_sls.tmc,3) else 0 end as tmc_201651
-, case when wkly_sls.fisc_yr_wk='201652' then round(wkly_sls.tmc,3) else 0 end as tmc_201652
+, case when wkly_sls.fisc_yr_wk='201649' then round(wkly_sls.tmc,3) else 0 end as tmc_one
+, case when wkly_sls.fisc_yr_wk='201650' then round(wkly_sls.tmc,3) else 0 end as tmc_two 
+, case when wkly_sls.fisc_yr_wk='201651' then round(wkly_sls.tmc,3) else 0 end as tmc_three
+, case when wkly_sls.fisc_yr_wk='201652' then round(wkly_sls.tmc,3) else 0 end as tmc_four
+, case when wkly_sls.fisc_yr_wk='201701' then round(wkly_sls.tmc,3) else 0 end as tmc_five
+, case when wkly_sls.fisc_yr_wk='201702' then round(wkly_sls.tmc,3) else 0 end as tmc_six
+, case when wkly_sls.fisc_yr_wk='201703' then round(wkly_sls.tmc,3) else 0 end as tmc_seven	
+, case when wkly_sls.fisc_yr_wk='201704' then round(wkly_sls.tmc,3) else 0 end as tmc_eight
+, case when wkly_sls.fisc_yr_wk='201705' then round(wkly_sls.tmc,3) else 0 end as tmc_nine
+, case when wkly_sls.fisc_yr_wk='201706' then round(wkly_sls.tmc,3) else 0 end as tmc_ten
+, case when wkly_sls.fisc_yr_wk='201707' then round(wkly_sls.tmc,3) else 0 end as tmc_eleven
+, case when wkly_sls.fisc_yr_wk='201708' then round(wkly_sls.tmc,3) else 0 end as tmc_twelve
+, case when wkly_sls.fisc_yr_wk='201709' then round(wkly_sls.tmc,3) else 0 end as tmc_thirteen
 
 from a_tabl
 
@@ -702,63 +705,63 @@ a.ttl_qty_cs_div
 create temp table almost2 as 
 select almost.*, 
 /*lpc flags*/
-case when lpc_201640=0 or almost.lpc_201641=0 then 0
-	when round(lpc_201640,2)=round(lpc_201641,2) then 0
+case when lpc_one=0 or almost.lpc_two=0 then 0
+	when round(lpc_one,2)=round(lpc_two,2) then 0
 	else 1
 	end as lpc_1,
 	
-case when lpc_201641=0 or almost.lpc_201642=0 then 0
-	when round(lpc_201641,2)=round(lpc_201642,2) then 0
+case when lpc_two=0 or almost.lpc_three=0 then 0
+	when round(lpc_two,2)=round(lpc_three,2) then 0
 	else 1
 	end as lpc_2,
 
-case when lpc_201642=0 or almost.lpc_201643=0 then 0
-	when round(lpc_201642,2)=round(lpc_201643,2) then 0
+case when lpc_three=0 or almost.lpc_four=0 then 0
+	when round(lpc_three,2)=round(lpc_four,2) then 0
 	else 1
 	end as lpc_3,	
 	
-case when lpc_201643=0 or almost.lpc_201644=0 then 0
-	when round(lpc_201643,2)=round(lpc_201644,2) then 0
+case when lpc_four=0 or almost.lpc_five=0 then 0
+	when round(lpc_four,2)=round(lpc_five,2) then 0
 	else 1
 	end as lpc_4,	
 
-case when lpc_201644=0 or almost.lpc_201645=0 then 0
-	when round(lpc_201644,2)=round(lpc_201645,2) then 0
+case when lpc_five=0 or almost.lpc_six=0 then 0
+	when round(lpc_five,2)=round(lpc_six,2) then 0
 	else 1
 	end as lpc_5,	
 
-case when lpc_201645=0 or almost.lpc_201646=0 then 0
-	when round(lpc_201645,2)=round(lpc_201646,2) then 0
+case when lpc_six=0 or almost.lpc_seven=0 then 0
+	when round(lpc_six,2)=round(lpc_seven,2) then 0
 	else 1
 	end as lpc_6,	
 	
-case when lpc_201646=0 or almost.lpc_201647=0 then 0
-	when round(lpc_201646,2)=round(lpc_201647,2) then 0
+case when lpc_seven=0 or almost.lpc_eight=0 then 0
+	when round(lpc_seven,2)=round(lpc_eight,2) then 0
 	else 1
 	end as lpc_7,	
 
-case when lpc_201647=0 or almost.lpc_201648=0 then 0
-	when round(lpc_201647,2)=round(lpc_201648,2) then 0
+case when lpc_eight=0 or almost.lpc_nine=0 then 0
+	when round(lpc_eight,2)=round(lpc_nine,2) then 0
 	else 1
 	end as lpc_8,
 
-case when lpc_201648=0 or almost.lpc_201649=0 then 0
-	when round(lpc_201648,2)=round(lpc_201649,2) then 0
+case when lpc_nine=0 or almost.lpc_ten=0 then 0
+	when round(lpc_nine,2)=round(lpc_ten,2) then 0
 	else 1
 	end as lpc_9,	
 
-case when lpc_201649=0 or almost.lpc_201650=0 then 0
-	when round(lpc_201649,2)=round(lpc_201650,2) then 0
+case when lpc_ten=0 or almost.lpc_eleven=0 then 0
+	when round(lpc_ten,2)=round(lpc_eleven,2) then 0
 	else 1
 	end as lpc_10,
 	
-case when lpc_201650=0 or almost.lpc_201651=0 then 0
-	when round(lpc_201650,2)=round(lpc_201651,2) then 0
+case when lpc_eleven=0 or almost.lpc_twelve=0 then 0
+	when round(lpc_eleven,2)=round(lpc_twelve,2) then 0
 	else 1
 	end as lpc_11,	
 
-case when lpc_201651=0 or almost.lpc_201652=0 then 0
-	when round(lpc_201651,2)=round(lpc_201652,2) then 0
+case when lpc_twelve=0 or almost.lpc_thirteen=0 then 0
+	when round(lpc_twelve,2)=round(lpc_thirteen,2) then 0
 	else 1
 	end as lpc_12,	
 
@@ -767,127 +770,127 @@ case when lpc_201651=0 or almost.lpc_201652=0 then 0
 -------------------
 --lpc change %
 
-case when lpc_201640=0 or almost.lpc_201641=0 then NULL
-	when round(lpc_201640,2)=round(lpc_201641,2) then 0
-	else abs(round(lpc_201641,2)/(0.00000001+round(lpc_201640,2))-1)
+case when lpc_one=0 or almost.lpc_two=0 then NULL
+	when round(lpc_one,2)=round(lpc_two,2) then 0
+	else abs(round(lpc_two,2)/(0.00000001+round(lpc_one,2))-1)
 	end as lpc_1_perc,
 	
-case when lpc_201641=0 or almost.lpc_201642=0 then NULL
-	when round(lpc_201641,2)=round(lpc_201642,2) then 0
-	else abs(round(lpc_201642,2)/(0.00000001+round(lpc_201641,2))-1)
+case when lpc_two=0 or almost.lpc_three=0 then NULL
+	when round(lpc_two,2)=round(lpc_three,2) then 0
+	else abs(round(lpc_three,2)/(0.00000001+round(lpc_two,2))-1)
 	end as lpc_2_perc,
 
-case when lpc_201642=0 or almost.lpc_201643=0 then NULL
-	when round(lpc_201642,2)=round(lpc_201643,2) then 0
-	else abs(round(lpc_201643,2)/(0.00000001+round(lpc_201642,2))-1)
+case when lpc_three=0 or almost.lpc_four=0 then NULL
+	when round(lpc_three,2)=round(lpc_four,2) then 0
+	else abs(round(lpc_four,2)/(0.00000001+round(lpc_three,2))-1)
 	end as lpc_3_perc,	
 	
-case when lpc_201643=0 or almost.lpc_201644=0 then NULL
-	when round(lpc_201643,2)=round(lpc_201644,2) then 0
-	else abs(round(lpc_201644,2)/(0.00000001+round(lpc_201643,2))-1)
+case when lpc_four=0 or almost.lpc_five=0 then NULL
+	when round(lpc_four,2)=round(lpc_five,2) then 0
+	else abs(round(lpc_five,2)/(0.00000001+round(lpc_four,2))-1)
 	end as lpc_4_perc,	
 
-case when lpc_201644=0 or almost.lpc_201645=0 then NULL
-	when round(lpc_201644,2)=round(lpc_201645,2) then 0
-	else abs(round(lpc_201645,2)/(0.00000001+round(lpc_201644,2))-1)
+case when lpc_five=0 or almost.lpc_six=0 then NULL
+	when round(lpc_five,2)=round(lpc_six,2) then 0
+	else abs(round(lpc_six,2)/(0.00000001+round(lpc_five,2))-1)
 	end as lpc_5_perc,	
 
-case when lpc_201645=0 or almost.lpc_201646=0 then NULL
-	when round(lpc_201645,2)=round(lpc_201646,2) then 0
-	else abs(round(lpc_201646,2)/(0.00000001+round(lpc_201645,2))-1)
+case when lpc_six=0 or almost.lpc_seven=0 then NULL
+	when round(lpc_six,2)=round(lpc_seven,2) then 0
+	else abs(round(lpc_seven,2)/(0.00000001+round(lpc_six,2))-1)
 	end as lpc_6_perc,	
 	
-case when lpc_201646=0 or almost.lpc_201647=0 then NULL
-	when round(lpc_201646,2)=round(lpc_201647,2) then 0
-	else abs(round(lpc_201647,2)/(0.00000001+round(lpc_201646,2))-1)
+case when lpc_seven=0 or almost.lpc_eight=0 then NULL
+	when round(lpc_seven,2)=round(lpc_eight,2) then 0
+	else abs(round(lpc_eight,2)/(0.00000001+round(lpc_seven,2))-1)
 	end as lpc_7_perc,	
 
-case when lpc_201647=0 or almost.lpc_201648=0 then NULL
-	when round(lpc_201647,2)=round(lpc_201648,2) then 0
-	else abs(round(lpc_201648,2)/(0.00000001+round(lpc_201647,2))-1)
+case when lpc_eight=0 or almost.lpc_nine=0 then NULL
+	when round(lpc_eight,2)=round(lpc_nine,2) then 0
+	else abs(round(lpc_nine,2)/(0.00000001+round(lpc_eight,2))-1)
 	end as lpc_8_perc,
 
-case when lpc_201648=0 or almost.lpc_201649=0 then NULL
-	when round(lpc_201648,2)=round(lpc_201649,2) then 0
-	else abs(round(lpc_201649,2)/(0.00000001+round(lpc_201648,2))-1)
+case when lpc_nine=0 or almost.lpc_ten=0 then NULL
+	when round(lpc_nine,2)=round(lpc_ten,2) then 0
+	else abs(round(lpc_ten,2)/(0.00000001+round(lpc_nine,2))-1)
 	end as lpc_9_perc,	
 
-case when lpc_201649=0 or almost.lpc_201650=0 then NULL
-	when round(lpc_201649,2)=round(lpc_201650,2) then 0
-	else abs(round(lpc_201650,2)/(0.00000001+round(lpc_201649,2))-1)
+case when lpc_ten=0 or almost.lpc_eleven=0 then NULL
+	when round(lpc_ten,2)=round(lpc_eleven,2) then 0
+	else abs(round(lpc_eleven,2)/(0.00000001+round(lpc_ten,2))-1)
 	end as lpc_10_perc,
 	
-case when lpc_201650=0 or almost.lpc_201651=0 then NULL
-	when round(lpc_201650,2)=round(lpc_201651,2) then 0
-	else abs(round(lpc_201651,2)/(0.00000001+round(lpc_201650,2))-1)
+case when lpc_eleven=0 or almost.lpc_twelve=0 then NULL
+	when round(lpc_eleven,2)=round(lpc_twelve,2) then 0
+	else abs(round(lpc_twelve,2)/(0.00000001+round(lpc_eleven,2))-1)
 	end as lpc_11_perc,	
 
-case when lpc_201651=0 or almost.lpc_201652=0 then NULL
-	when round(lpc_201651,2)=round(lpc_201652,2) then 0
-	else abs(round(lpc_201652,2)/(0.00000001+round(lpc_201651,2))-1)
+case when lpc_twelve=0 or almost.lpc_thirteen=0 then NULL
+	when round(lpc_twelve,2)=round(lpc_thirteen,2) then 0
+	else abs(round(lpc_thirteen,2)/(0.00000001+round(lpc_twelve,2))-1)
 	end as lpc_12_perc,
 
 
 
 	
 /*tmc flags*/
-case when tmc_201640=0 or almost.tmc_201641=0 then 0
-	when round(tmc_201640,2)=round(tmc_201641,2) then 0
+case when tmc_one=0 or almost.tmc_two=0 then 0
+	when round(tmc_one,2)=round(tmc_two,2) then 0
 	else 1
 	end as tmc_1,
 	
-case when tmc_201641=0 or almost.tmc_201642=0 then 0
-	when round(tmc_201641,2)=round(tmc_201642,2) then 0
+case when tmc_two=0 or almost.tmc_three=0 then 0
+	when round(tmc_two,2)=round(tmc_three,2) then 0
 	else 1
 	end as tmc_2,
 
-case when tmc_201642=0 or almost.tmc_201643=0 then 0
-	when round(tmc_201642,2)=round(tmc_201643,2) then 0
+case when tmc_three=0 or almost.tmc_four=0 then 0
+	when round(tmc_three,2)=round(tmc_four,2) then 0
 	else 1
 	end as tmc_3,	
 	
-case when tmc_201643=0 or almost.tmc_201644=0 then 0
-	when round(tmc_201643,2)=round(tmc_201644,2) then 0
+case when tmc_four=0 or almost.tmc_five=0 then 0
+	when round(tmc_four,2)=round(tmc_five,2) then 0
 	else 1
 	end as tmc_4,	
 
-case when tmc_201644=0 or almost.tmc_201645=0 then 0
-	when round(tmc_201644,2)=round(tmc_201645,2) then 0
+case when tmc_five=0 or almost.tmc_six=0 then 0
+	when round(tmc_five,2)=round(tmc_six,2) then 0
 	else 1
 	end as tmc_5,	
 
-case when tmc_201645=0 or almost.tmc_201646=0 then 0
-	when round(tmc_201645,2)=round(tmc_201646,2) then 0
+case when tmc_six=0 or almost.tmc_seven=0 then 0
+	when round(tmc_six,2)=round(tmc_seven,2) then 0
 	else 1
 	end as tmc_6,	
 	
-case when tmc_201646=0 or almost.tmc_201647=0 then 0
-	when round(tmc_201646,2)=round(tmc_201647,2) then 0
+case when tmc_seven=0 or almost.tmc_eight=0 then 0
+	when round(tmc_seven,2)=round(tmc_eight,2) then 0
 	else 1
 	end as tmc_7,	
 
-case when tmc_201647=0 or almost.tmc_201648=0 then 0
-	when round(tmc_201647,2)=round(tmc_201648,2) then 0
+case when tmc_eight=0 or almost.tmc_nine=0 then 0
+	when round(tmc_eight,2)=round(tmc_nine,2) then 0
 	else 1
 	end as tmc_8,
 
-case when tmc_201648=0 or almost.tmc_201649=0 then 0
-	when round(tmc_201648,2)=round(tmc_201649,2) then 0
+case when tmc_nine=0 or almost.tmc_ten=0 then 0
+	when round(tmc_nine,2)=round(tmc_ten,2) then 0
 	else 1
 	end as tmc_9,	
 
-case when tmc_201649=0 or almost.tmc_201650=0 then 0
-	when round(tmc_201649,2)=round(tmc_201650,2) then 0
+case when tmc_ten=0 or almost.tmc_eleven=0 then 0
+	when round(tmc_ten,2)=round(tmc_eleven,2) then 0
 	else 1
 	end as tmc_10,
 	
-case when tmc_201650=0 or almost.tmc_201651=0 then 0
-	when round(tmc_201650,2)=round(tmc_201651,2) then 0
+case when tmc_eleven=0 or almost.tmc_twelve=0 then 0
+	when round(tmc_eleven,2)=round(tmc_twelve,2) then 0
 	else 1
 	end as tmc_11,	
 
-case when tmc_201651=0 or almost.tmc_201652=0 then 0
-	when round(tmc_201651,2)=round(tmc_201652,2) then 0
+case when tmc_twelve=0 or almost.tmc_thirteen=0 then 0
+	when round(tmc_twelve,2)=round(tmc_thirteen,2) then 0
 	else 1
 	end as tmc_12	
 	
@@ -942,32 +945,32 @@ weighted_psi,
 psi_cnt,
 psi_cnt_div,
 psi_share_of_item_in_div,
-lpc_201640,
-lpc_201641,
-lpc_201642,
-lpc_201643,
-lpc_201644,
-lpc_201645,
-lpc_201646,
-lpc_201647,
-lpc_201648,
-lpc_201649,
-lpc_201650,
-lpc_201651,
-lpc_201652,
-tmc_201640,
-tmc_201641,
-tmc_201642,
-tmc_201643,
-tmc_201644,
-tmc_201645,
-tmc_201646,
-tmc_201647,
-tmc_201648,
-tmc_201649,
-tmc_201650,
-tmc_201651,
-tmc_201652,
+lpc_one,
+lpc_two,
+lpc_three,
+lpc_four,
+lpc_five,
+lpc_six,
+lpc_seven,
+lpc_eight,
+lpc_nine,
+lpc_ten,
+lpc_eleven,
+lpc_twelve,
+lpc_thirteen,
+tmc_one,
+tmc_two,
+tmc_three,
+tmc_four,
+tmc_five,
+tmc_six,
+tmc_seven,
+tmc_eight,
+tmc_nine,
+tmc_ten,
+tmc_eleven,
+tmc_twelve,
+tmc_thirteen,
 lpc_1,
 lpc_2,
 lpc_3,
@@ -1074,7 +1077,7 @@ and almost2.prod_nbr = s.prod_nbr
 
 
 
-where s.prcs_dt between '2016-10-02' and '2016-12-31'
+where s.prcs_dt between '2016-12-04' and '2017-03-04'
 
 group by 
 almost2.div_prod_combo,
@@ -1314,11 +1317,11 @@ almost2.perc_chng_0_plus
 --									'WHITING, BREADED OR BATTERED',
 --									'FLOUNDER/SOLE, VALUE ADDED, FROZEN',
 --									'HERRING & ANCHOVIES, VALUE ADDED, REFRIGERATED'
-								/*Seafood PIM Group exclusions - 23 PIM Groups */
-
-								)
+--								/*Seafood PIM Group exclusions - 23 PIM Groups */
+--
+--								)
 --;
----- endregion
+-- endregion
 
 
 /*statement 9: Division level threshold and rules were applied here to get the flag*/
