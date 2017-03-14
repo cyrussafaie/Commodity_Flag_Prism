@@ -352,30 +352,42 @@ table(com_flg_final)
 
 
 fsa=paste("final_data",format(Sys.time(), "%Y%b%d"),sep = "") 
-final_dataJan31=cbind(final_data_new_adj_majority,com_flg_final)
-table(final_dataJan31$com_flg_final)
+fsa=cbind(final_data_new_adj_majority,com_flg_final)
+table(fsa$com_flg_final)
 
-#write.csv(final_dataJan31,"final_dataJan31_1445.csv") #98% threshold        
-
-final_dataJan31=read.csv("final_dataJan31_1445.csv")
-dim(final_dataJan31)
+write.csv(fsa,"fsa_1445.csv") #98% threshold        
+#head(fsa)
+#dir()
+fsa=read.csv("fsa_1445.csv")
+dim(fsa)
 #reapplying the exclusion filter
-out2 <- ifelse(final_dataJan31$pim_cls_desc %in% pimclasses | final_dataJan31$pim_grp_desc %in% pimgroups | final_dataJan31$div_nm =="CHARLOTTE", "N",final_dataJan31$com_flg_final)
+out2 <- ifelse(fsa$pim_cls_desc %in% pimclasses | fsa$pim_grp_desc %in% pimgroups | fsa$div_nm =="CHARLOTTE", "N",fsa$com_flg_final)
 out2[out2 %in% 1] <- "N"
 out2[out2 %in% 2] <- "Y"
 table(out2)
-final_dataJan31_final=cbind(final_dataJan31,com_flg_final_final=out2)
-dim(final_dataJan31_final)
+fsa_final=cbind(fsa,com_flg_final_final=out2)
+dim(fsa_final)
 
-write.csv(final_dataJan31_final,"final_dataJan31_1525.csv",row.names = F)
+write.csv(fsa_final,"fsa_1525.csv",row.names = F)
 
-final_dataJan31_final$ttl_mrkt_itm[is.na(final_dataJan31_final$ttl_mrkt_itm)]<-0
+fsa_final$ttl_mrkt_itm[is.na(fsa_final$ttl_mrkt_itm)]<-0
 
-dim(final_dataJan31_final)
-final_dataJan31_final$com_flg_final_final[final_dataJan31_final$ttl_mrkt_itm=1]<-final_dataJan31_final$com_flg_adj
+head(fsa_final$ttl_mrkt_itm,100)
+tail(fsa_final,30)
 
-unique(final_dataJan31_final$com_flg_adj)
-final_dataJan31_final$ttl_mrkt_itm
+fsa_final$com_flg_final_final[fsa_final$ttl_mrkt_itm==1]<-fsa_final$com_flg_adj
+
+#table(fsa_final$com_flg_final_final)
+
+fsa_final$com_flg_final_final[fsa_final$ttl_mrkt_itm==1]=fsa_final$com_flg_adj[fsa_final$ttl_mrkt_itm==1]
+
+
+# seems to be finals
+write.csv(fsa_final,"fsa_1719.csv", row.names = F )
+dim(fsa_final)
+
+unique(fsa_final$com_flg_adj)
+
 # unique(final_data_new_adj_majority$prod_stat_desc)
 # dim(final_data_new_adj_majority)
 # names(div)
@@ -386,22 +398,22 @@ final_dataJan31_final$ttl_mrkt_itm
 ```
 
 ```{r}
-final_dataJan31_final=read.csv("final_dataJan31_1525.csv")
-names(final_dataJan31_final)
-
-write.csv(final_dataJan31_final,"final_dataJan31_1745.csv", row.names = F )
-dim(final_dataJan31_final)
+# fsa_final = read.csv("fsa_1525.csv")
+# names(fsa_final)
+# 
+# write.csv(fsa_final, "fsa_1745.csv", row.names = F)
+# dim(fsa_final)
 ```
 
 
 ```{r}
-table(reco=final_dataJan31_final$com_flg_final_final,current=final_dataJan31_final$cmdty_ind)
+table(reco=fsa_final$com_flg_final_final,current=fsa_final$cmdty_ind)
 
 ```
 
 ```{r}
 
-mydf <- read.csv("com_flag_20161121.csv")
+#mydf <- read.csv("com_flag_20161121.csv")
 ```
 
 ## Flag Count by Division
@@ -409,7 +421,7 @@ mydf <- read.csv("com_flag_20161121.csv")
 ```{r}
 library(sqldf)
 
-divs=sqldf('select div_nm, count(*) as "proposed" from final_dataJan31_final where com_flg_final_final="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
+divs=sqldf('select div_nm, count(*) as "proposed" from fsa_final where com_flg_final_final="Y" and div_nm not in ("CHARLOTTE","WAUKESHA") group by div_nm ')
 
 divs[order(divs$proposed),]
 
@@ -420,7 +432,7 @@ mean(divs$proposed)
 ```{r}
 library(sqldf)
 
-div=sqldf('select div_nm, count(*) as "current" from final_dataJan31 where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
+div=sqldf('select div_nm, count(*) as "current" from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
 div[order(div$current),]
 
 mean(div$current)
@@ -437,14 +449,14 @@ fff[order(fff$delta.ProposedMinusCurrent),]
 ## Flag Count by Class
 
 ```{r}
-cls=sqldf('select pim_cls_desc, count(*) from final_dataJan31_final where  div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+cls=sqldf('select pim_cls_desc, count(*) from fsa_final where  div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
 cls[order(cls$'count(*)'),]
 
 #com_flg_final_final="Y" and
 ```
 
 ```{r}
-cls=sqldf('select pim_cls_desc, count(*) from final_dataJan31_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+cls=sqldf('select pim_cls_desc, count(*) from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
 
 #
 cls[order(cls$'count(*)'),]
