@@ -304,7 +304,7 @@ str(final_data_new_adj)
 Now let's apply the majority rule: if more than 80% of market currently flag then flag everywhere, if more than 80 % suggesting flag then flag. Contingency on the number of markets as well (5 or 10 at least dependening on the results).
 
 ```{r}
-unique(final_data_new_adj$div_nm)
+#unique(final_data_new_adj$div_nm)
 library(sqldf)
 all=sqldf('select prod_nbr, count(distinct div_nm) as ttl_mrkt_itm
           from final_data_new_adj 
@@ -349,7 +349,9 @@ com_flg_final= ifelse(final_data_new_adj_majority$final_IsMajority==1,"Y",final_
 com_flg_final[com_flg_final %in% 1] <- "N"
 com_flg_final[com_flg_final %in% 2] <- "Y"
 table(com_flg_final)
- 
+
+
+fsa=paste("final_data",format(Sys.time(), "%Y%b%d"),sep = "") 
 final_dataJan31=cbind(final_data_new_adj_majority,com_flg_final)
 table(final_dataJan31$com_flg_final)
 
