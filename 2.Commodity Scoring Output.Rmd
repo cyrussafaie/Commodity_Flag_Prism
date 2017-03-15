@@ -432,7 +432,7 @@ mean(divs$proposed)
 ```{r}
 library(sqldf)
 
-div=sqldf('select div_nm, count(*) as "current" from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by div_nm ')
+div=sqldf('select div_nm, count(*) as "current" from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","WAUKESHA") group by div_nm ')
 div[order(div$current),]
 
 mean(div$current)
@@ -449,14 +449,14 @@ fff[order(fff$delta.ProposedMinusCurrent),]
 ## Flag Count by Class
 
 ```{r}
-cls=sqldf('select pim_cls_desc, count(*) from fsa_final where  div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+cls=sqldf('select pim_cls_desc, count(*) from fsa_final where  div_nm not in ("CHARLOTTE","WAUKESHA") group by pim_cls_desc ')
 cls[order(cls$'count(*)'),]
 
 #com_flg_final_final="Y" and
 ```
 
 ```{r}
-cls=sqldf('select pim_cls_desc, count(*) from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","MILWAUKEE-WAUKESHA") group by pim_cls_desc ')
+cls=sqldf('select pim_cls_desc, count(*) from fsa_final where cmdty_ind="Y" and div_nm not in ("CHARLOTTE","WAUKESHA") group by pim_cls_desc ')
 
 #
 cls[order(cls$'count(*)'),]
